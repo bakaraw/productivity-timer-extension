@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Time } from './../types/types';
 import { sendMessage, Message, Response } from './../utils/messaging';
+import useTimer from './../hooks/useTimer'
+import { time } from 'console';
 
 type TimerInfo = {
   timer: {
@@ -79,7 +81,7 @@ export const TimerUI = (params: TimerInfo) => {
     };
 
     try {
-      const response: Response<{ status: string }> = await sendMessage(message);
+      const response: Response<{ status: string }> = await sendMessage(message, null);
 
       if (response.data) {
         console.log('Received reply:', response.data.status);
@@ -92,9 +94,11 @@ export const TimerUI = (params: TimerInfo) => {
     }
   }
 
+  const timeLeft = useTimer();
+
   return (
     <div className="text-2xl">
-      <h1>Timer Oten sa kanding</h1>
+      <h1>Timer Oten sa kanding {timeLeft}</h1>
       <div className="grid grid-rows-3 grid-cols-3 gap-3">
         <div><button onClick={() => changeHours(true)}>up</button></div>
         <div><button onClick={() => changeMinutes(true)}>up</button></div>
