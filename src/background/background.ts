@@ -46,7 +46,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		sendResponse({ data: { status: "Timer started" } });
 	} else if (message.type === 'STOP_TIMER') {
 		timer.stop();
-		sendResponse({ data: { status: "Timer stopped" } });
+		sendResponse({ data: { status: "Timer stopped", duration: timer.getDuration() } });
 	}
 });
 

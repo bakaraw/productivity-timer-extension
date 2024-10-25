@@ -6,6 +6,7 @@ class Timer {
   private interval: number = 1000;
   private onTick: TimerCallback | null = null;
   private onFinish: TimerCallback | null = null;
+  private duration: number = 0;
 
   constructor(interval: number = 1000) {
     this.interval = interval;
@@ -18,6 +19,7 @@ class Timer {
 
   public start(duration: number) {
     this.timeLeft = duration;
+    this.duration = duration;
     this.stop();
 
     this.timerId = setInterval(() => {
@@ -45,6 +47,10 @@ class Timer {
 
   public isActive(): boolean {
     return this.timerId !== null;
+  }
+
+  public getDuration(): number {
+    return this.duration;
   }
 
 }

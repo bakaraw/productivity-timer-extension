@@ -8,7 +8,7 @@ export interface Response<T = any> {
   error?: string;
 }
 
-export function sendMessage<TMessage, TResponse>(message: Message<TMessage>, action: string | null):
+export function sendMessage<TMessage, TResponse>(message: Message<TMessage>):
   Promise<Response<TResponse>> {
   return new Promise((resolve, reject) => {
     const callback = (response: Response<TResponse>) => {
@@ -19,11 +19,7 @@ export function sendMessage<TMessage, TResponse>(message: Message<TMessage>, act
       }
     }
 
-    if (action) {
-      chrome.runtime.sendMessage({ action, message }, callback);
-    } else {
-      chrome.runtime.sendMessage(message, callback);
-    }
+    chrome.runtime.sendMessage(message, callback);
   });
 
 }

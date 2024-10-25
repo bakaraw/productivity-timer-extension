@@ -10,7 +10,7 @@ function useTimer(): number | null {
       if (message.timeLeft !== undefined) {
         setTimeLeft(message.timeLeft);
       }
-    })
+    });
 
     return () => {
       port.disconnect();
