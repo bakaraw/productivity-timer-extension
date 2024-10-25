@@ -3,14 +3,9 @@ import ReactDOM from 'react-dom';
 import { Time } from './../types/types';
 import { sendMessage, Message, Response } from './../utils/messaging';
 import useTimer from './../hooks/useTimer'
-import { time } from 'console';
 
 type TimerInfo = {
-  timer: {
-    hours: number,
-    minutes: number,
-    seconds: number,
-  },
+  timer: Time,
   setTimer: (timer: Time) => void,
   setIsRunning: (isRunning: boolean) => void,
 }
@@ -75,9 +70,10 @@ export const TimerUI = (params: TimerInfo) => {
   }
 
   const startTimer = async () => {
+    const duration = params.timer.hours * 3600 + params.timer.minutes * 60 + params.timer.seconds;
     const message: Message<{ duration: number }> = {
       type: 'START_TIMER',
-      payload: { duration: 60 }
+      payload: { duration: duration }
     };
 
     try {
@@ -95,10 +91,13 @@ export const TimerUI = (params: TimerInfo) => {
   }
 
   const timeLeft = useTimer();
+  const minutesLeft = timeLeft !== null ? Math.floor(timeLeft / 60) : 0;
+  const secondsLeft = timeLeft !== null ? timeLeft % 60 : 0;
 
   return (
     <div className="text-2xl">
       <h1>Timer Oten sa kanding {timeLeft}</h1>
+      <h1>Time: {minutesLeft} - {secondsLeft}</h1>
       <div className="grid grid-rows-3 grid-cols-3 gap-3">
         <div><button onClick={() => changeHours(true)}>up</button></div>
         <div><button onClick={() => changeMinutes(true)}>up</button></div>
