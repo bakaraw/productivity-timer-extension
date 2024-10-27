@@ -16,7 +16,6 @@ timer.setCallbacks(
 		console.log('Timer finished!');
 		if (port) {
 			port.postMessage({ timeLeft: 0 });
-
 		}
 	}
 );
@@ -46,7 +45,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		sendResponse({ data: { status: "Timer started" } });
 	} else if (message.type === 'STOP_TIMER') {
 		timer.stop();
-		sendResponse({ data: { status: "Timer stopped", duration: timer.getDuration() } });
+		sendResponse({ data: { status: "Timer stopped" } });
 	}
 });
 

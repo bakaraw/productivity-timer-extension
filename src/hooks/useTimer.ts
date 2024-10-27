@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function useTimer(): number | null {
+function useTimer() {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
   const connectToTimer = () => {
@@ -17,8 +17,13 @@ function useTimer(): number | null {
     }
 
   }
+
+  const resetTimer = () => {
+    setTimeLeft(null);
+  }
+
   connectToTimer();
-  return timeLeft;
+  return { timeLeft, resetTimer };
 }
 
 export default useTimer;

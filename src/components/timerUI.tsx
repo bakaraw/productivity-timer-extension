@@ -5,8 +5,7 @@ import { sendMessage, Message, Response } from './../utils/messaging';
 import useTimer from './../hooks/useTimer'
 
 export const TimerUI = () => {
-  let timeLeft = useTimer();
-  const [isRunning, setIsRunning] = useState<boolean>(false);
+  let { timeLeft, resetTimer } = useTimer();
   const [duration, setDuration] = useState<Time>({
     minutes: 0,
     seconds: 0,
@@ -24,7 +23,6 @@ export const TimerUI = () => {
 
       if (response.data) {
         console.log('Received reply:', response.data.status);
-        setIsRunning(true);
       } else {
         console.error('Background error:', response.error);
       }
@@ -40,13 +38,10 @@ export const TimerUI = () => {
     }
 
     try {
-      const response: Response<{ status: string, duration: number }> = await sendMessage(message);
-
+      const response: Response<{ status: string }> = await sendMessage(message);
       if (response.data) {
         console.log('Received reply:', response.data.status);
-        setIsRunning(false);
-        setDuration({ ...duration, minutes: response.data.duration })
-        timeLeft = 0;
+        resetTimer();
       } else {
         console.error('Background error:', response.error);
       }
@@ -71,13 +66,21 @@ export const TimerUI = () => {
     }
   }
 
-  const minutesLeft = timeLeft !== null ? Math.floor(timeLeft / 60) : duration.minutes;
-  const secondsLeft = timeLeft !== null ? timeLeft % 60 : duration.seconds;
+  let minutesLeft: number = 0;
+  let secondsLeft: number = 0;
+
+  if (timeLeft !== null) {
+    minutesLeft = timeLeft > 0 ? Math.floor(timeLeft / 60) : duration.minutes;
+    secondsLeft = timeLeft > 0 ? timeLeft % 60 : duration.seconds;
+  } else {
+    minutesLeft = duration.minutes;
+    secondsLeft = duration.seconds;
+  }
+
 
   return (
     <div className="text-2xl">
-      <h1>Timer Oten sa kanding {timeLeft}</h1>
-      <h1>Time: {minutesLeft} - {secondsLeft}</h1>
+      <h1>Timer</h1>
       <div className="grid grid-rows-2 grid-cols-2 gap-2">
         <div><button onClick={() => changeMinutes(true)}>up</button></div>
         <div><button onClick={() => changeSeconds(true)}>up</button></div>
