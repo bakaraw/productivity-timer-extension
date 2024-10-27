@@ -51,6 +51,10 @@ export const TimerUI = () => {
   }
 
   const changeMinutes = (isUp: boolean) => {
+    if (timeLeft !== null) {
+      return;
+    }
+
     if (isUp) {
       setDuration({ ...duration, minutes: duration.minutes + 1 });
     } else {
@@ -59,6 +63,10 @@ export const TimerUI = () => {
   }
 
   const changeSeconds = (isUp: boolean) => {
+    if (timeLeft !== null) {
+      return;
+    }
+
     if (isUp) {
       duration.seconds >= 60 ? setDuration({ ...duration, seconds: 0 }) : setDuration({ ...duration, seconds: duration.seconds + 1 });
     } else {
@@ -72,6 +80,11 @@ export const TimerUI = () => {
   if (timeLeft !== null) {
     minutesLeft = timeLeft > 0 ? Math.floor(timeLeft / 60) : duration.minutes;
     secondsLeft = timeLeft > 0 ? timeLeft % 60 : duration.seconds;
+
+    if (timeLeft <= 0) {
+      resetTimer();
+    }
+
   } else {
     minutesLeft = duration.minutes;
     secondsLeft = duration.seconds;
