@@ -11,13 +11,15 @@ export interface Response<T = any> {
 export function sendMessage<TMessage, TResponse>(message: Message<TMessage>):
   Promise<Response<TResponse>> {
   return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(message, (response: Response<TResponse>) => {
+    const callback = (response: Response<TResponse>) => {
       if (chrome.runtime.lastError) {
         reject(chrome.runtime.lastError.message);
       } else {
         resolve(response);
       }
-    })
+    }
+
+    chrome.runtime.sendMessage(message, callback);
   });
 
 }

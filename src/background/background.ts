@@ -3,21 +3,38 @@ import Timer from './../utils/Timer'
 const timer = new Timer();
 
 console.log('Background script running');
+let port: chrome.runtime.Port | null = null;
 
 timer.setCallbacks(
 	() => {
-		console.log(`Time Left: ${timer.getTimeLeft()}`)
+		console.log(`Time Left: ${timer.getTimeLeft()}`);
+		if (port) {
+			port.postMessage({ timeLeft: timer.getTimeLeft() });
+		}
 	},
 	() => {
 		console.log('Timer finished!');
+		if (port) {
+			port.postMessage({ timeLeft: 0 });
+		}
 	}
-)
+);
 
 chrome.runtime.onInstalled.addListener(() => {
 	console.log('Extension installed');
 });
 
+chrome.runtime.onConnect.addListener((newPort) => {
+	if (newPort.name === 'timerUpdates') {
+		port = newPort;
+		port.onDisconnect.addListener(() => {
+			port = null;
+		});
+	}
+})
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+
 	if (message.type === 'greet') {
 		console.log('Received greeting:', message.payload.content);
 		sendResponse({ data: { reply: 'Hello from background.js!' } });
@@ -29,10 +46,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	} else if (message.type === 'STOP_TIMER') {
 		timer.stop();
 		sendResponse({ data: { status: "Timer stopped" } });
-	} else if (message.type === 'GET_TIME_LEFT') {
-		sendResponse({ timeLeft: timer.getTimeLeft() });
 	}
 });
 
 export { };
-
