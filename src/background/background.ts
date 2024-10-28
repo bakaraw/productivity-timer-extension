@@ -34,12 +34,6 @@ chrome.runtime.onConnect.addListener((newPort) => {
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-
-	if (message.type === 'greet') {
-		console.log('Received greeting:', message.payload.content);
-		sendResponse({ data: { reply: 'Hello from background.js!' } });
-	}
-
 	if (message.type === 'START_TIMER') {
 		timer.start(message.payload.duration);
 		sendResponse({ data: { status: "Timer started" } });

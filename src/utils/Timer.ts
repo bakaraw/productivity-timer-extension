@@ -41,6 +41,7 @@ class Timer {
     }
   }
 
+  // make pause
   public getTimeLeft(): number {
     return this.timeLeft;
   }

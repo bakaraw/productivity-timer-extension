@@ -46,8 +46,9 @@ export const TimerUI = () => {
         <div><button onClick={() => changeMinutes(false)}>down</button></div>
         <div><button onClick={() => changeSeconds(false)}>down</button></div>
       </div>
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-3">
         <div><button onClick={() => TimerControls.startTimer()}>Start</button></div>
+        <div><button onClick={() => TimerControls.pauseTimer()}>Pause</button></div>
         <div><button onClick={() => TimerControls.stopTimer()}>Stop</button></div>
       </div>
     </div>
