@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Time } from './../types/types';
 import useTimerControls from './../hooks/useTimerControls';
 
-export const TimerUI = () => {
+export const TimerControllerUI = () => {
   const [duration, setDuration] = useState<Time>({
     minutes: 0,
     seconds: 0,
@@ -42,7 +42,7 @@ export const TimerUI = () => {
         <div><button onClick={() => changeMinutes(true)}>up</button></div>
         <div><button onClick={() => changeSeconds(true)}>up</button></div>
         <div>{TimerControls.minutesLeft}</div>
-        <div>{TimerControls.secondsLeft}s</div>
+        <div>{TimerControls.secondsLeft}</div>
         <div><button onClick={() => changeMinutes(false)}>down</button></div>
         <div><button onClick={() => changeSeconds(false)}>down</button></div>
       </div>

@@ -1,13 +1,14 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { TimerUI } from './components/timerUI';
+import { TimerControllerUI } from './components/timerControllerUI';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" data-testid="app-1">
       <header className="App-header">
-        <TimerUI />
+        <div ></div>
+        <TimerControllerUI />
       </header>
     </div>
   );

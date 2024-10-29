@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.114",
@@ -42,9 +41,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.8",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.25.8",
     "@babel/preset-react": "^7.25.7",
     "@babel/preset-typescript": "^7.25.7",
+    "@testing-library/react": "^16.0.1",
     "@types/chrome": "^0.0.278",
     "autoprefixer": "^10.4.20",
     "babel-loader": "^9.2.1",
@@ -53,6 +54,7 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.6.2",
     "postcss": "^8.4.47",
+    "react-test-renderer": "^18.3.1",
     "style-loader": "^4.0.0",
     "tailwindcss": "^3.4.14",
     "ts-loader": "^9.5.1",
@@ -60,5 +62,6 @@
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0"
-  }
+  },
+  "jest": {}
 }
