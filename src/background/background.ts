@@ -1,5 +1,5 @@
 import Timer from './../utils/Timer'
-import { shouldBlockSite } from './../utils/blocker';
+import { shouldBlockSite, getBlockedSites } from './../utils/blocker';
 
 const timer = new Timer();
 
