@@ -26,7 +26,13 @@ chrome.webRequest.onBeforeRequest.addListener(
 	(details) => {
 		const url = new URL(details.url);
 		if (timer.isActive() && shouldBlockSite(url.hostname)) {
-			console.log(`Blocked: ${url.hostname}`);
+			chrome.tabs.query({ url: getBlockedSites() }, (tabs: chrome.tabs.Tab[]) => {
+				tabs.forEach((tab) => {
+					if (tab.id !== undefined) {
+						chrome.tabs.remove(tab.id);
+					}
+				});
+			});
 			return { cancel: true };
 		}
 		return { cancel: false };
@@ -34,6 +40,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 	{ urls: ["<all_urls>"] },
 	["blocking"]
 );
+
 
 chrome.runtime.onInstalled.addListener(() => {
 	console.log('Extension installed');

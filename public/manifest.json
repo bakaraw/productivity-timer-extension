@@ -17,6 +17,8 @@
     "webRequest",
     "webRequestBlocking",
     "http://*/",
-    "https://*/"
+    "https://*/",
+    "tabs",
+    "activeTab"
   ]
 }
