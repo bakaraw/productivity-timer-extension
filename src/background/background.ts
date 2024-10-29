@@ -11,6 +11,7 @@ timer.setCallbacks(
 		if (port) {
 			port.postMessage({ timeLeft: timer.getTimeLeft() });
 		}
+
 	},
 	() => {
 		console.log('Timer finished!');
@@ -18,6 +19,21 @@ timer.setCallbacks(
 			port.postMessage({ timeLeft: 0 });
 		}
 	}
+);
+
+const blockedSites = ["facebook.com", "youtube.com"];
+
+chrome.webRequest.onBeforeRequest.addListener(
+	(details) => {
+		const url = new URL(details.url);
+		if (timer.isActive() && blockedSites.some(site => url.hostname.includes(site))) {
+			console.log(`Blocked: ${url.hostname}`);
+			return { cancel: true };
+		}
+		return { cancel: false };
+	},
+	{ urls: ["<all_urls>"] },
+	["blocking"]
 );
 
 chrome.runtime.onInstalled.addListener(() => {
