@@ -12,5 +12,11 @@
       "background.bundle.js"
     ],
     "persistent": true
-  }
+  },
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "http://*/",
+    "https://*/"
+  ]
 }
