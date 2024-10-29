@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Time } from './../types/types';
 import useTimerControls from './../hooks/useTimerControls';
+import { TimerControlBtns } from './timerControlBtns';
 
 export const TimerControllerUI = () => {
   const [duration, setDuration] = useState<Time>({
@@ -45,11 +46,11 @@ export const TimerControllerUI = () => {
         <div>{TimerControls.secondsLeft}</div>
         <div><button onClick={() => changeMinutes(false)}>down</button></div>
         <div><button onClick={() => changeSeconds(false)}>down</button></div>
-      </div>
-      <div className="grid grid-cols-3">
-        <div><button onClick={() => TimerControls.startTimer()}>Start</button></div>
-        <div><button onClick={() => TimerControls.pauseTimer()}>Pause</button></div>
-        <div><button onClick={() => TimerControls.stopTimer()}>Stop</button></div>
+        <TimerControlBtns
+          startTimer={TimerControls.startTimer}
+          pauseTimer={TimerControls.pauseTimer}
+          stopTimer={TimerControls.stopTimer}
+        />
       </div>
     </div>
   );
