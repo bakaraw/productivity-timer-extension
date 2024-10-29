@@ -1,5 +1,5 @@
 import Timer from './../utils/Timer'
-import { shouldBlockSite, getBlockedSites } from './../utils/blocker';
+import { blockSites } from './../utils/blocker';
 
 const timer = new Timer();
 
@@ -24,18 +24,7 @@ timer.setCallbacks(
 
 chrome.webRequest.onBeforeRequest.addListener(
 	(details) => {
-		const url = new URL(details.url);
-		if (timer.isActive() && shouldBlockSite(url.hostname)) {
-			chrome.tabs.query({ url: getBlockedSites() }, (tabs: chrome.tabs.Tab[]) => {
-				tabs.forEach((tab) => {
-					if (tab.id !== undefined) {
-						chrome.tabs.remove(tab.id);
-					}
-				});
-			});
-			return { cancel: true };
-		}
-		return { cancel: false };
+		return blockSites(details, timer);
 	},
 	{ urls: ["<all_urls>"] },
 	["blocking"]
