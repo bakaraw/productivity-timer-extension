@@ -1,4 +1,5 @@
 import Timer from './../utils/Timer'
+import { shouldBlockSite } from './../utils/blocker';
 
 const timer = new Timer();
 
@@ -21,12 +22,10 @@ timer.setCallbacks(
 	}
 );
 
-const blockedSites = ["facebook.com", "youtube.com"];
-
 chrome.webRequest.onBeforeRequest.addListener(
 	(details) => {
 		const url = new URL(details.url);
-		if (timer.isActive() && blockedSites.some(site => url.hostname.includes(site))) {
+		if (timer.isActive() && shouldBlockSite(url.hostname)) {
 			console.log(`Blocked: ${url.hostname}`);
 			return { cancel: true };
 		}
