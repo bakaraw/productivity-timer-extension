@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 function useTimerControls(duration: Time) {
 
-  let { timeLeft, resetTimer } = useTimer();
+  let { timeLeft, resetTimer, restTimeLeft, resetRestTimer } = useTimer();
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
   const startTimer = async () => {
@@ -75,15 +75,33 @@ function useTimerControls(duration: Time) {
     }
   }
 
+  const startRestTimer = async () => {
+    const message: Message = {
+      type: 'START_REST_TIMER',
+    }
+
+    try {
+      const response: Response<{ status: string }> = await sendMessage(message);
+      if (response.data) {
+        console.log('Received reply:', response.data.status);
+      } else {
+        console.error('Background error:', response.error);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
   let minutesLeft: number = 0;
   let secondsLeft: number = 0;
 
   if (timeLeft !== null) {
-    minutesLeft = timeLeft > 0 ? Math.floor(timeLeft / 60) : duration.minutes;
-    secondsLeft = timeLeft > 0 ? timeLeft % 60 : duration.seconds;
+    minutesLeft = timeLeft >= 0 ? Math.floor(timeLeft / 60) : duration.minutes;
+    secondsLeft = timeLeft >= 0 ? timeLeft % 60 : duration.seconds;
 
-    if (timeLeft <= 0) {
+    if (timeLeft < 0) {
       resetTimer();
+      //startRestTimer();
     }
 
   } else {
@@ -98,7 +116,9 @@ function useTimerControls(duration: Time) {
     timeLeft,
     minutesLeft,
     secondsLeft,
-    pauseTimer
+    pauseTimer,
+    restTimeLeft,
+    resetRestTimer
   }
 
   return TimerControls;

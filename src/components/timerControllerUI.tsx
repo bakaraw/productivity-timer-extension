@@ -10,6 +10,11 @@ export const TimerControllerUI = () => {
     seconds: 0,
   });
 
+  const [restDuration, setRestDuration] = useState<Time>({
+    minutes: 0,
+    seconds: 0,
+  })
+
   const TimerControls = useTimerControls(duration);
 
   const changeMinutes = (isUp: boolean) => {
@@ -39,7 +44,7 @@ export const TimerControllerUI = () => {
   return (
     <div className="text-2xl">
       <h1>Timer</h1>
-      <div className="grid grid-rows-2 grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <div><button onClick={() => changeMinutes(true)}>up</button></div>
         <div><button onClick={() => changeSeconds(true)}>up</button></div>
         <div>{TimerControls.minutesLeft}</div>
@@ -51,6 +56,11 @@ export const TimerControllerUI = () => {
           pauseTimer={TimerControls.pauseTimer}
           stopTimer={TimerControls.stopTimer}
         />
+      </div>
+      <div className='grid grid-cols-2 gap-2'>
+        <h1 className='col-span-2'>Rest Time</h1>
+        <div>{TimerControls.restTimeLeft} ywa m</div>
+        <div>2s</div>
       </div>
     </div>
   );

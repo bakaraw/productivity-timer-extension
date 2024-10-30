@@ -1,10 +1,13 @@
 import Timer from './../utils/Timer'
+
 import { blockSites } from './../utils/blocker';
 
 const timer = new Timer();
+const restTimer = new Timer();
 
 console.log('Background script running');
 let port: chrome.runtime.Port | null = null;
+let restPort: chrome.runtime.Port | null = null;
 
 timer.setCallbacks(
 	() => {
@@ -17,7 +20,23 @@ timer.setCallbacks(
 	() => {
 		console.log('Timer finished!');
 		if (port) {
-			port.postMessage({ timeLeft: 0 });
+			port.postMessage({ timeLeft: timer.getTimeLeft() });
+		}
+		restTimer.start(60);
+	}
+);
+
+restTimer.setCallbacks(
+	() => {
+		console.log(`Rest Time Left: ${restTimer.getTimeLeft()}`);
+		if (restPort) {
+			restPort.postMessage({ timeLeft: restTimer.getTimeLeft() });
+		}
+	},
+	() => {
+		console.log('Rest Timer finished!');
+		if (restPort) {
+			restPort.postMessage({ timeLeft: 0 });
 		}
 	}
 );
@@ -42,6 +61,13 @@ chrome.runtime.onConnect.addListener((newPort) => {
 			port = null;
 		});
 	}
+
+	if (newPort.name === 'restTimerUpdates') {
+		restPort = newPort;
+		restPort.onDisconnect.addListener(() => {
+			restPort = null;
+		});
+	}
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -51,6 +77,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	} else if (message.type === 'STOP_TIMER') {
 		timer.stop();
 		sendResponse({ data: { status: "Timer stopped" } });
+	} else if (message.type === 'START_REST_TIMER') {
+		restTimer.start(60);
+		sendResponse({ data: { status: "Rest Timer started" } });
 	}
 });
 
