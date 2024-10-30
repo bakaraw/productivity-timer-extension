@@ -75,23 +75,6 @@ function useTimerControls(duration: Time) {
     }
   }
 
-  const startRestTimer = async () => {
-    const message: Message = {
-      type: 'START_REST_TIMER',
-    }
-
-    try {
-      const response: Response<{ status: string }> = await sendMessage(message);
-      if (response.data) {
-        console.log('Received reply:', response.data.status);
-      } else {
-        console.error('Background error:', response.error);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
   let minutesLeft: number = 0;
   let secondsLeft: number = 0;
 

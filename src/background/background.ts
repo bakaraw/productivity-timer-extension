@@ -22,7 +22,7 @@ timer.setCallbacks(
 		if (port) {
 			port.postMessage({ timeLeft: timer.getTimeLeft() });
 		}
-		restTimer.start(60);
+		restTimer.start(5);
 	}
 );
 
@@ -35,9 +35,13 @@ restTimer.setCallbacks(
 	},
 	() => {
 		console.log('Rest Timer finished!');
+
 		if (restPort) {
-			restPort.postMessage({ timeLeft: 0 });
+			restPort.postMessage({ timeLeft: restTimer.getTimeLeft() });
 		}
+
+		let duration = timer.getDuration();
+		timer.start(duration);
 	}
 );
 
