@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 function useTimerControls(duration: Time) {
 
-  let { timeLeft, resetTimer } = useTimer();
+  let { timeLeft, resetTimer, restTimeLeft, resetRestTimer } = useTimer();
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
   const startTimer = async () => {
@@ -79,11 +79,12 @@ function useTimerControls(duration: Time) {
   let secondsLeft: number = 0;
 
   if (timeLeft !== null) {
-    minutesLeft = timeLeft > 0 ? Math.floor(timeLeft / 60) : duration.minutes;
-    secondsLeft = timeLeft > 0 ? timeLeft % 60 : duration.seconds;
+    minutesLeft = timeLeft >= 0 ? Math.floor(timeLeft / 60) : duration.minutes;
+    secondsLeft = timeLeft >= 0 ? timeLeft % 60 : duration.seconds;
 
-    if (timeLeft <= 0) {
+    if (timeLeft < 0) {
       resetTimer();
+      //startRestTimer();
     }
 
   } else {
@@ -98,7 +99,9 @@ function useTimerControls(duration: Time) {
     timeLeft,
     minutesLeft,
     secondsLeft,
-    pauseTimer
+    pauseTimer,
+    restTimeLeft,
+    resetRestTimer
   }
 
   return TimerControls;
