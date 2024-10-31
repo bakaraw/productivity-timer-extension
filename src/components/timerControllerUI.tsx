@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Time, TimerControls } from './../types/types';
 import { TimerControlBtns } from './timerControlBtns';
 import useTimerControls from './../hooks/useTimerControls';
+import { TimerDisplay } from './timerDisplay';
 
 export const TimerControllerUI = () => {
   const [duration, setDuration] = useState<Time>({
@@ -43,25 +44,29 @@ export const TimerControllerUI = () => {
 
   return (
     <div className="text-2xl">
-      <div className="grid grid-cols-2 gap-2">
-        <div><button onClick={() => changeMinutes(true)}>up</button></div>
-        <div><button onClick={() => changeSeconds(true)}>up</button></div>
-        <div>{TimerControls.minutesLeft}</div>
-        <div>{TimerControls.secondsLeft}</div>
-        <div><button onClick={() => changeMinutes(false)}>down</button></div>
-        <div><button onClick={() => changeSeconds(false)}>down</button></div>
-        <TimerControlBtns
-          startTimer={TimerControls.startTimer}
-          pauseTimer={TimerControls.pauseTimer}
-          stopTimer={TimerControls.stopTimer}
-        />
-      </div>
-      <div className='grid grid-cols-2 gap-2'>
-        <h1 className='col-span-2'>Rest Time</h1>
-        <div>{TimerControls.restMinutesLeft}m</div>
-        <div>{TimerControls.restSecondsLeft}s</div>
-      </div>
+      <h1>Work Timer</h1>
+      <TimerDisplay
+        timeLeft={{ minutes: TimerControls.minutesLeft, seconds: TimerControls.secondsLeft }}
+        changeMinutes={changeMinutes}
+        changeSeconds={changeSeconds}
+      />
+      <h1>Rest Timer</h1>
+      <TimerDisplay
+        timeLeft={{ minutes: TimerControls.restMinutesLeft, seconds: TimerControls.restSecondsLeft }}
+        changeMinutes={changeMinutes}
+        changeSeconds={changeSeconds}
+      />
+
+      <TimerControlBtns
+        startTimer={TimerControls.startTimer}
+        pauseTimer={TimerControls.pauseTimer}
+        stopTimer={TimerControls.stopTimer}
+      />
     </div>
   );
-
+  //<div className='grid grid-cols-2 gap-2'>
+  //  <h1 className='col-span-2'>Rest Time</h1>
+  //  <div>{TimerControls.restMinutesLeft}m</div>
+  //  <div>{TimerControls.restSecondsLeft}s</div>
+  //</div>
 }
