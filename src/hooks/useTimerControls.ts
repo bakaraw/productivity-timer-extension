@@ -11,18 +11,19 @@ function useTimerControls(duration: Time, restDuration: Time): TimerControls {
 
   const startTimer = async () => {
     const finalDuration = duration.minutes * 60 + duration.seconds;
-    let message: Message<{ duration: number }> | null = null;
+    const finalRestDuration = restDuration.minutes * 60 + restDuration.seconds;
+    let message: Message<{ duration: number, restDuration: number }> | null = null;
 
     if (isPaused) {
       message = {
         type: 'START_TIMER',
-        payload: { duration: timeLeft !== null ? timeLeft : finalDuration }
+        payload: { duration: timeLeft !== null ? timeLeft : finalDuration, restDuration: finalRestDuration }
       };
       setIsPaused(false);
     } else {
       message = {
         type: 'START_TIMER',
-        payload: { duration: finalDuration }
+        payload: { duration: finalDuration, restDuration: finalRestDuration }
       };
     }
 

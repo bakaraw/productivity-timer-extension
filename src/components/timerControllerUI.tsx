@@ -42,21 +42,44 @@ export const TimerControllerUI = () => {
     }
   }
 
+  const changeRestMinutes = (isUp: boolean) => {
+    if (TimerControls.restTimeLeft !== null) {
+      return;
+    }
+
+    if (isUp) {
+      setRestDuration({ ...restDuration, minutes: restDuration.minutes + 1 });
+    } else {
+      restDuration.minutes <= 0 ? setRestDuration({ ...restDuration, minutes: 0 }) : setRestDuration({ ...restDuration, minutes: restDuration.minutes - 1 });
+    }
+  }
+
+  const changeRestSeconds = (isUp: boolean) => {
+    if (TimerControls.restTimeLeft !== null) {
+      return;
+    }
+
+    if (isUp) {
+      restDuration.seconds >= 60 ? setRestDuration({ ...restDuration, seconds: 0 }) : setRestDuration({ ...restDuration, seconds: restDuration.seconds + 1 });
+    } else {
+      restDuration.seconds <= 0 ? setRestDuration({ ...restDuration, seconds: 60 }) : setRestDuration({ ...restDuration, seconds: restDuration.seconds - 1 });
+    }
+  }
+
   return (
     <div className="text-2xl">
-      <h1>Work Timer</h1>
-      <TimerDisplay
-        timeLeft={{ minutes: TimerControls.minutesLeft, seconds: TimerControls.secondsLeft }}
-        changeMinutes={changeMinutes}
-        changeSeconds={changeSeconds}
-      />
-      <h1>Rest Timer</h1>
-      <TimerDisplay
-        timeLeft={{ minutes: TimerControls.restMinutesLeft, seconds: TimerControls.restSecondsLeft }}
-        changeMinutes={changeMinutes}
-        changeSeconds={changeSeconds}
-      />
-
+      <div className='grid grid-cols-2 gap-2'>
+        <TimerDisplay
+          timeLeft={{ minutes: TimerControls.minutesLeft, seconds: TimerControls.secondsLeft }}
+          changeMinutes={changeMinutes}
+          changeSeconds={changeSeconds}
+        />
+        <TimerDisplay
+          timeLeft={{ minutes: TimerControls.restMinutesLeft, seconds: TimerControls.restSecondsLeft }}
+          changeMinutes={changeRestMinutes}
+          changeSeconds={changeRestSeconds}
+        />
+      </div>
       <TimerControlBtns
         startTimer={TimerControls.startTimer}
         pauseTimer={TimerControls.pauseTimer}
