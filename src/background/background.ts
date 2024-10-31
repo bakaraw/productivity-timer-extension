@@ -22,7 +22,8 @@ timer.setCallbacks(
 		if (port) {
 			port.postMessage({ timeLeft: timer.getTimeLeft() });
 		}
-		restTimer.start(5);
+		let duration = restTimer.getDuration();
+		restTimer.start(duration);
 	}
 );
 
@@ -77,6 +78,7 @@ chrome.runtime.onConnect.addListener((newPort) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	if (message.type === 'START_TIMER') {
 		timer.start(message.payload.duration);
+		restTimer.setDuration(message.payload.restDuration);
 		sendResponse({ data: { status: "Timer started" } });
 	} else if (message.type === 'STOP_TIMER') {
 		timer.stop();

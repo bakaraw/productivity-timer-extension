@@ -54,6 +54,10 @@ class Timer {
     return this.duration;
   }
 
+  public setDuration(duration: number) {
+    this.duration = duration;
+  }
+
 }
 
 export default Timer;
