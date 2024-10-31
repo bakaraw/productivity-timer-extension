@@ -4,6 +4,7 @@ import { Time, TimerControls } from './../types/types';
 import { TimerControlBtns } from './timerControlBtns';
 import useTimerControls from './../hooks/useTimerControls';
 import { TimerDisplay } from './timerDisplay';
+import NumberInput from './numberInput';
 
 export const TimerControllerUI = () => {
   const [duration, setDuration] = useState<Time>({
@@ -66,6 +67,8 @@ export const TimerControllerUI = () => {
     }
   }
 
+  const [reps, setReps] = useState<number>(1);
+
   return (
     <div className="text-2xl">
       <div className='grid grid-cols-2 gap-2'>
@@ -79,6 +82,7 @@ export const TimerControllerUI = () => {
           changeMinutes={changeRestMinutes}
           changeSeconds={changeRestSeconds}
         />
+        <NumberInput value={reps} onChange={(value) => setReps(value)} min={1} max={100} />
       </div>
       <TimerControlBtns
         startTimer={TimerControls.startTimer}
@@ -87,9 +91,4 @@ export const TimerControllerUI = () => {
       />
     </div>
   );
-  //<div className='grid grid-cols-2 gap-2'>
-  //  <h1 className='col-span-2'>Rest Time</h1>
-  //  <div>{TimerControls.restMinutesLeft}m</div>
-  //  <div>{TimerControls.restSecondsLeft}s</div>
-  //</div>
 }
