@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Time } from './../types/types';
-import useTimerControls from './../hooks/useTimerControls';
+import { Time, TimerControls } from './../types/types';
 import { TimerControlBtns } from './timerControlBtns';
+import useTimerControls from './../hooks/useTimerControls';
 
 export const TimerControllerUI = () => {
   const [duration, setDuration] = useState<Time>({
@@ -15,7 +15,7 @@ export const TimerControllerUI = () => {
     seconds: 0,
   })
 
-  const TimerControls = useTimerControls(duration);
+  const TimerControls = useTimerControls(duration, restDuration);
 
   const changeMinutes = (isUp: boolean) => {
     if (TimerControls.timeLeft !== null) {
@@ -43,7 +43,6 @@ export const TimerControllerUI = () => {
 
   return (
     <div className="text-2xl">
-      <h1>Timer</h1>
       <div className="grid grid-cols-2 gap-2">
         <div><button onClick={() => changeMinutes(true)}>up</button></div>
         <div><button onClick={() => changeSeconds(true)}>up</button></div>
@@ -59,8 +58,8 @@ export const TimerControllerUI = () => {
       </div>
       <div className='grid grid-cols-2 gap-2'>
         <h1 className='col-span-2'>Rest Time</h1>
-        <div>{TimerControls.restTimeLeft} ywa m</div>
-        <div>2s</div>
+        <div>{TimerControls.restMinutesLeft}m</div>
+        <div>{TimerControls.restSecondsLeft}s</div>
       </div>
     </div>
   );

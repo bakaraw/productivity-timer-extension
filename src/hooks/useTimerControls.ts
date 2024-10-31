@@ -1,9 +1,10 @@
-import { Time } from './../types/types';
+import { Time, TimerControls } from './../types/types';
 import { sendMessage, Message, Response } from './../utils/messaging';
 import useTimer from './../hooks/useTimer'
 import { useState } from 'react';
 
-function useTimerControls(duration: Time) {
+
+function useTimerControls(duration: Time, restDuration: Time): TimerControls {
 
   let { timeLeft, resetTimer, restTimeLeft, resetRestTimer } = useTimer();
   const [isPaused, setIsPaused] = useState<boolean>(false);
@@ -92,6 +93,17 @@ function useTimerControls(duration: Time) {
     secondsLeft = duration.seconds;
   }
 
+  let restMinutesLeft: number = 0;
+  let restSecondsLeft: number = 0;
+
+  if (restTimeLeft !== null) {
+    restMinutesLeft = restTimeLeft >= 0 ? Math.floor(restTimeLeft / 60) : restDuration.minutes;
+    restSecondsLeft = restTimeLeft >= 0 ? restTimeLeft % 60 : restDuration.seconds;
+  } else {
+    restMinutesLeft = restDuration.minutes;
+    restSecondsLeft = restDuration.seconds;
+  }
+
   const TimerControls = {
     startTimer,
     resetTimer,
@@ -101,7 +113,9 @@ function useTimerControls(duration: Time) {
     secondsLeft,
     pauseTimer,
     restTimeLeft,
-    resetRestTimer
+    resetRestTimer,
+    restMinutesLeft,
+    restSecondsLeft
   }
 
   return TimerControls;
