@@ -13,5 +13,7 @@ export interface TimerControls {
   pauseTimer: () => Promise<void>;
   restTimeLeft: number | null;
   resetRestTimer: () => void;
+  restMinutesLeft: number;
+  restSecondsLeft: number;
 }
 
