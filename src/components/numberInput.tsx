@@ -8,7 +8,7 @@ type NumberInputProps = {
   step?: number;
 };
 
-const CustomNumberInput: React.FC<NumberInputProps> = ({
+const NumberInput: React.FC<NumberInputProps> = ({
   value,
   onChange,
   min = 0,
@@ -67,4 +67,4 @@ const CustomNumberInput: React.FC<NumberInputProps> = ({
   );
 };
 
-export default CustomNumberInput;
+export default NumberInput;

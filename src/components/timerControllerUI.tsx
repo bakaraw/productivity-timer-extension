@@ -69,19 +69,38 @@ export const TimerControllerUI = () => {
 
   const [reps, setReps] = useState<number>(1);
 
+  const changeDurationMinutes = (minutes: number) => {
+    setDuration({ ...duration, minutes });
+  };
+
+  const changeRestDurationMinutes = (minutes: number) => {
+    setRestDuration({ ...restDuration, minutes });
+  };
+
+  const changeDurationSeconds = (seconds: number) => {
+    setDuration({ ...duration, seconds });
+  };
+
+  const changeRestDurationSeconds = (seconds: number) => {
+    setRestDuration({ ...restDuration, seconds });
+  };
+
   return (
     <div className="text-2xl">
       <div className='grid grid-cols-2 gap-2'>
+
         <TimerDisplay
           timeLeft={{ minutes: TimerControls.minutesLeft, seconds: TimerControls.secondsLeft }}
-          changeMinutes={changeMinutes}
-          changeSeconds={changeSeconds}
+          changeMinutes={changeDurationMinutes}
+          changeSeconds={changeDurationSeconds}
         />
+
         <TimerDisplay
           timeLeft={{ minutes: TimerControls.restMinutesLeft, seconds: TimerControls.restSecondsLeft }}
-          changeMinutes={changeRestMinutes}
-          changeSeconds={changeRestSeconds}
+          changeMinutes={changeRestDurationMinutes}
+          changeSeconds={changeRestDurationSeconds}
         />
+
         <NumberInput value={reps} onChange={(value) => setReps(value)} min={1} max={100} />
       </div>
       <TimerControlBtns
