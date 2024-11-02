@@ -51,6 +51,7 @@ function useTimerControls(duration: Time, restDuration: Time): TimerControls {
       if (response.data) {
         console.log('Received reply:', response.data.status);
         resetTimer();
+        resetRestTimer();
       } else {
         console.error('Background error:', response.error);
       }
@@ -100,6 +101,11 @@ function useTimerControls(duration: Time, restDuration: Time): TimerControls {
   if (restTimeLeft !== null) {
     restMinutesLeft = restTimeLeft >= 0 ? Math.floor(restTimeLeft / 60) : restDuration.minutes;
     restSecondsLeft = restTimeLeft >= 0 ? restTimeLeft % 60 : restDuration.seconds;
+
+    if (restTimeLeft < 0) {
+      resetRestTimer();
+    }
+
   } else {
     restMinutesLeft = restDuration.minutes;
     restSecondsLeft = restDuration.seconds;
