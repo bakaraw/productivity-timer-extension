@@ -16,8 +16,7 @@ function useTimerControls(duration: Time, restDuration: Time): TimerControls {
 
     if (isPaused) {
       message = {
-        type: 'START_TIMER',
-        payload: { duration: timeLeft !== null ? timeLeft : finalDuration, restDuration: finalRestDuration }
+        type: 'START_PAUSE_TIMER',
       };
       setIsPaused(false);
     } else {
