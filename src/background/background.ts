@@ -77,6 +77,7 @@ chrome.runtime.onConnect.addListener((newPort) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	if (message.type === 'START_TIMER') {
+		timer.setDuration(message.payload.duration);
 		timer.start(message.payload.duration);
 		restTimer.setDuration(message.payload.restDuration);
 		sendResponse({ data: { status: "Timer started" } });
@@ -87,6 +88,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	} else if (message.type === 'START_REST_TIMER') {
 		restTimer.start(60);
 		sendResponse({ data: { status: "Rest Timer started" } });
+	} else if (message.type === 'PAUSE_TIMER') {
+		restTimer.stop();
+		sendResponse({ data: { status: "Rest Timer stopped" } });
+	} else if (message.type === 'START_PAUSE_TIMER') {
+		if (timer.getTimeLeft() > 0) {
+			timer.resume();
+		}
+
+		if (restTimer.getTimeLeft() > 0) {
+			restTimer.resume();
+		}
+
+		sendResponse({ data: { status: "Rest Timer stopped" } });
 	}
 });
 

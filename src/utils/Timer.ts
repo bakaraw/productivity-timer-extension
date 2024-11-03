@@ -19,7 +19,6 @@ class Timer {
 
   public start(duration: number) {
     this.timeLeft = duration;
-    this.duration = duration;
     this.stop();
 
     this.timerId = setInterval(() => {
@@ -41,7 +40,10 @@ class Timer {
     }
   }
 
-  // make pause
+  public resume() {
+    this.start(this.timeLeft);
+  }
+
   public getTimeLeft(): number {
     return this.timeLeft;
   }
