@@ -4,7 +4,7 @@ import useTimer from './../hooks/useTimer'
 import { useState } from 'react';
 
 
-function useTimerControls(duration: Time, restDuration: Time): TimerControls {
+function useTimerControls(duration: Time, restDuration: Time, reps: number): TimerControls {
 
   let { timeLeft, resetTimer, restTimeLeft, resetRestTimer } = useTimer();
   const [isPaused, setIsPaused] = useState<boolean>(false);
@@ -12,7 +12,7 @@ function useTimerControls(duration: Time, restDuration: Time): TimerControls {
   const startTimer = async () => {
     const finalDuration = duration.minutes * 60 + duration.seconds;
     const finalRestDuration = restDuration.minutes * 60 + restDuration.seconds;
-    let message: Message<{ duration: number, restDuration: number }> | null = null;
+    let message: Message<{ duration: number, restDuration: number, reps: number }> | null = null;
 
     if (isPaused) {
       message = {
@@ -22,7 +22,7 @@ function useTimerControls(duration: Time, restDuration: Time): TimerControls {
     } else {
       message = {
         type: 'START_TIMER',
-        payload: { duration: finalDuration, restDuration: finalRestDuration }
+        payload: { duration: finalDuration, restDuration: finalRestDuration, reps: reps }
       };
     }
 
@@ -86,7 +86,6 @@ function useTimerControls(duration: Time, restDuration: Time): TimerControls {
 
     if (timeLeft < 0) {
       resetTimer();
-      //startRestTimer();
     }
 
   } else {

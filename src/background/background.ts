@@ -25,7 +25,7 @@ function timerTickCallback(port: chrome.runtime.Port | null, timer: Timer): void
 
 function timerFinishCallback(port: chrome.runtime.Port | null, timer: Timer, callback: () => void) {
 	if (port) {
-		port.postMessage({ timeLeft: timer.getTimeLeft() });
+		port.postMessage({ timeLeft: null });
 	}
 	callback();
 }
@@ -35,9 +35,18 @@ timer.setCallbacks(() => timerTickCallback(port, timer), () => timerFinishCallba
 	restTimer.start(duration);
 }));
 
+let reps = 0;
 restTimer.setCallbacks(() => timerTickCallback(restPort, restTimer), () => timerFinishCallback(restPort, restTimer, () => {
-	let duration = timer.getDuration();
-	timer.start(duration);
+	if (reps > 0) {
+		reps--;
+		console.log('Reps left:', reps);
+		let duration = timer.getDuration();
+		timer.start(duration);
+	} else {
+		console.log('All done');
+		timer.stop();
+		restTimer.stop();
+	}
 }));
 
 chrome.webRequest.onBeforeRequest.addListener(
@@ -75,10 +84,12 @@ function setupPort(newPort: chrome.runtime.Port, portName: string, setPort: (por
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	switch (message.type) {
 		case MESSAGE_TYPES.START_TIMER:
+			reps = message.payload.reps - 1;
 			timer.setDuration(message.payload.duration);
 			timer.start(message.payload.duration);
 			restTimer.setDuration(message.payload.restDuration);
 			sendResponse({ data: { status: "Timer started" } });
+			console.log('Timer started reps: ', reps);
 			break;
 
 		case MESSAGE_TYPES.STOP_TIMER:
@@ -98,7 +109,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 			} else if (restTimer.getTimeLeft() > 0) {
 				restTimer.resume();
 			}
-
 			sendResponse({ data: { status: "Rest Timer stopped" } });
 			break;
 
