@@ -2,6 +2,14 @@ import Timer from './../utils/Timer'
 
 import { blockSites } from './../utils/blocker';
 
+const MESSAGE_TYPES = {
+	START_TIMER: 'START_TIMER',
+	STOP_TIMER: 'STOP_TIMER',
+	START_REST_TIMER: 'START_REST_TIMER',
+	PAUSE_TIMER: 'PAUSE_TIMER',
+	START_PAUSE_TIMER: 'START_PAUSE_TIMER',
+};
+
 const timer = new Timer();
 const restTimer = new Timer();
 
@@ -9,42 +17,28 @@ console.log('Background script running');
 let port: chrome.runtime.Port | null = null;
 let restPort: chrome.runtime.Port | null = null;
 
-timer.setCallbacks(
-	() => {
-		console.log(`Time Left: ${timer.getTimeLeft()}`);
-		if (port) {
-			port.postMessage({ timeLeft: timer.getTimeLeft() });
-		}
-
-	},
-	() => {
-		console.log('Timer finished!');
-		if (port) {
-			port.postMessage({ timeLeft: timer.getTimeLeft() });
-		}
-		let duration = restTimer.getDuration();
-		restTimer.start(duration);
+function timerTickCallback(port: chrome.runtime.Port | null, timer: Timer): void {
+	if (port) {
+		port.postMessage({ timeLeft: timer.getTimeLeft() });
 	}
-);
+}
 
-restTimer.setCallbacks(
-	() => {
-		console.log(`Rest Time Left: ${restTimer.getTimeLeft()}`);
-		if (restPort) {
-			restPort.postMessage({ timeLeft: restTimer.getTimeLeft() });
-		}
-	},
-	() => {
-		console.log('Rest Timer finished!');
-
-		if (restPort) {
-			restPort.postMessage({ timeLeft: restTimer.getTimeLeft() });
-		}
-
-		let duration = timer.getDuration();
-		timer.start(duration);
+function timerFinishCallback(port: chrome.runtime.Port | null, timer: Timer, callback: () => void) {
+	if (port) {
+		port.postMessage({ timeLeft: timer.getTimeLeft() });
 	}
-);
+	callback();
+}
+
+timer.setCallbacks(() => timerTickCallback(port, timer), () => timerFinishCallback(port, timer, () => {
+	let duration = restTimer.getDuration();
+	restTimer.start(duration);
+}));
+
+restTimer.setCallbacks(() => timerTickCallback(restPort, restTimer), () => timerFinishCallback(restPort, restTimer, () => {
+	let duration = timer.getDuration();
+	timer.start(duration);
+}));
 
 chrome.webRequest.onBeforeRequest.addListener(
 	(details) => {
@@ -60,47 +54,56 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.runtime.onConnect.addListener((newPort) => {
-	if (newPort.name === 'timerUpdates') {
-		port = newPort;
-		port.onDisconnect.addListener(() => {
-			port = null;
-		});
-	}
+	setupPort(newPort, 'timerUpdates', (p) => {
+		port = p;
+	});
 
-	if (newPort.name === 'restTimerUpdates') {
-		restPort = newPort;
-		restPort.onDisconnect.addListener(() => {
-			restPort = null;
-		});
-	}
+	setupPort(newPort, 'restTimerUpdates', (p) => {
+		restPort = p;
+	});
 })
 
+function setupPort(newPort: chrome.runtime.Port, portName: string, setPort: (port: chrome.runtime.Port | null) => void) {
+	if (newPort.name === portName) {
+		setPort(newPort);
+		newPort.onDisconnect.addListener(() => {
+			setPort(null);
+		});
+	}
+}
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-	if (message.type === 'START_TIMER') {
-		timer.setDuration(message.payload.duration);
-		timer.start(message.payload.duration);
-		restTimer.setDuration(message.payload.restDuration);
-		sendResponse({ data: { status: "Timer started" } });
-	} else if (message.type === 'STOP_TIMER') {
-		timer.stop();
-		restTimer.stop();
-		sendResponse({ data: { status: "Timer stopped" } });
-	} else if (message.type === 'START_REST_TIMER') {
-		restTimer.start(60);
-		sendResponse({ data: { status: "Rest Timer started" } });
-	} else if (message.type === 'PAUSE_TIMER') {
-		restTimer.stop();
-		sendResponse({ data: { status: "Rest Timer stopped" } });
-	} else if (message.type === 'START_PAUSE_TIMER') {
-		if (timer.getTimeLeft() > 0) {
-			timer.resume();
-		}
+	switch (message.type) {
+		case MESSAGE_TYPES.START_TIMER:
+			timer.setDuration(message.payload.duration);
+			timer.start(message.payload.duration);
+			restTimer.setDuration(message.payload.restDuration);
+			sendResponse({ data: { status: "Timer started" } });
+			break;
 
-		if (restTimer.getTimeLeft() > 0) {
-			restTimer.resume();
-		}
+		case MESSAGE_TYPES.STOP_TIMER:
+			timer.stop();
+			restTimer.stop();
+			sendResponse({ data: { status: "Timer stopped" } });
+			break;
 
-		sendResponse({ data: { status: "Rest Timer stopped" } });
+		case MESSAGE_TYPES.PAUSE_TIMER:
+			restTimer.stop();
+			sendResponse({ data: { status: "Rest Timer stopped" } });
+			break;
+
+		case MESSAGE_TYPES.START_PAUSE_TIMER:
+			if (timer.getTimeLeft() > 0) {
+				timer.resume();
+			} else if (restTimer.getTimeLeft() > 0) {
+				restTimer.resume();
+			}
+
+			sendResponse({ data: { status: "Rest Timer stopped" } });
+			break;
+
+		default:
+			break;
 	}
 });
 
