@@ -17,57 +17,9 @@ export const TimerControllerUI = () => {
     seconds: 0,
   })
 
-  const TimerControls = useTimerControls(duration, restDuration);
-
-  const changeMinutes = (isUp: boolean) => {
-    if (TimerControls.timeLeft !== null) {
-      return;
-    }
-
-    if (isUp) {
-      setDuration({ ...duration, minutes: duration.minutes + 1 });
-    } else {
-      duration.minutes <= 0 ? setDuration({ ...duration, minutes: 0 }) : setDuration({ ...duration, minutes: duration.minutes - 1 });
-    }
-  }
-
-  const changeSeconds = (isUp: boolean) => {
-    if (TimerControls.timeLeft !== null) {
-      return;
-    }
-
-    if (isUp) {
-      duration.seconds >= 60 ? setDuration({ ...duration, seconds: 0 }) : setDuration({ ...duration, seconds: duration.seconds + 1 });
-    } else {
-      duration.seconds <= 0 ? setDuration({ ...duration, seconds: 60 }) : setDuration({ ...duration, seconds: duration.seconds - 1 });
-    }
-  }
-
-  const changeRestMinutes = (isUp: boolean) => {
-    if (TimerControls.restTimeLeft !== null) {
-      return;
-    }
-
-    if (isUp) {
-      setRestDuration({ ...restDuration, minutes: restDuration.minutes + 1 });
-    } else {
-      restDuration.minutes <= 0 ? setRestDuration({ ...restDuration, minutes: 0 }) : setRestDuration({ ...restDuration, minutes: restDuration.minutes - 1 });
-    }
-  }
-
-  const changeRestSeconds = (isUp: boolean) => {
-    if (TimerControls.restTimeLeft !== null) {
-      return;
-    }
-
-    if (isUp) {
-      restDuration.seconds >= 60 ? setRestDuration({ ...restDuration, seconds: 0 }) : setRestDuration({ ...restDuration, seconds: restDuration.seconds + 1 });
-    } else {
-      restDuration.seconds <= 0 ? setRestDuration({ ...restDuration, seconds: 60 }) : setRestDuration({ ...restDuration, seconds: restDuration.seconds - 1 });
-    }
-  }
-
   const [reps, setReps] = useState<number>(1);
+
+  const TimerControls = useTimerControls(duration, restDuration, reps);
 
   const changeDurationMinutes = (minutes: number) => {
     setDuration({ ...duration, minutes });
