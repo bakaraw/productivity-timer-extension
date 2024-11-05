@@ -9,11 +9,10 @@ type TimerTextProps = {
   changeSeconds: (value: number) => void;
 }
 
-export const TimerDisplay = (params: TimerTextProps) => {
+export const MinutesInput = (params: TimerTextProps) => {
   return (
     <div className='grid grid-cols-2 gap-2'>
       <NumberInput value={params.timeLeft.minutes} onChange={(value) => params.changeMinutes(value)} min={0} max={300} />
-      <NumberInput value={params.timeLeft.seconds} onChange={(value) => params.changeSeconds(value)} min={0} max={60} />
     </div>
   );
 }
