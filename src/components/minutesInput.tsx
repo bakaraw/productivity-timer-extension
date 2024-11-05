@@ -11,7 +11,7 @@ type TimerTextProps = {
 
 export const MinutesInput = (params: TimerTextProps) => {
   return (
-    <div className='grid grid-cols-2 gap-2'>
+    <div className=''>
       <NumberInput value={params.timeLeft.minutes} onChange={(value) => params.changeMinutes(value)} min={0} max={300} />
     </div>
   );

@@ -38,9 +38,8 @@ export const TimerControllerUI = () => {
   };
 
   return (
-    <div className="text-2xl">
-      <div className='grid grid-cols-2 gap-2'>
-
+    <div className="text-2xl flex flex-col h-full">
+      <div className="grid grid-cols-2 gap-1">
         <MinutesInput
           timeLeft={{ minutes: TimerControls.minutesLeft, seconds: TimerControls.secondsLeft }}
           changeMinutes={changeDurationMinutes}
@@ -55,11 +54,14 @@ export const TimerControllerUI = () => {
 
         <NumberInput value={reps} onChange={(value) => setReps(value)} min={1} max={100} />
       </div>
-      <TimerControlBtns
-        startTimer={TimerControls.startTimer}
-        pauseTimer={TimerControls.pauseTimer}
-        stopTimer={TimerControls.stopTimer}
-      />
+
+      <div className="mt-auto">
+        <TimerControlBtns
+          startTimer={TimerControls.startTimer}
+          pauseTimer={TimerControls.pauseTimer}
+          stopTimer={TimerControls.stopTimer}
+        />
+      </div>
     </div>
   );
 }
