@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Time, TimerControls } from './../types/types';
 import { TimerControlBtns } from './timerControlBtns';
 import useTimerControls from './../hooks/useTimerControls';
-import { TimerDisplay } from './timerDisplay';
+import { MinutesInput } from './minutesInput';
 import NumberInput from './numberInput';
 
 export const TimerControllerUI = () => {
@@ -41,13 +41,13 @@ export const TimerControllerUI = () => {
     <div className="text-2xl">
       <div className='grid grid-cols-2 gap-2'>
 
-        <TimerDisplay
+        <MinutesInput
           timeLeft={{ minutes: TimerControls.minutesLeft, seconds: TimerControls.secondsLeft }}
           changeMinutes={changeDurationMinutes}
           changeSeconds={changeDurationSeconds}
         />
 
-        <TimerDisplay
+        <MinutesInput
           timeLeft={{ minutes: TimerControls.restMinutesLeft, seconds: TimerControls.restSecondsLeft }}
           changeMinutes={changeRestDurationMinutes}
           changeSeconds={changeRestDurationSeconds}
