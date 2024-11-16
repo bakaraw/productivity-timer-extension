@@ -5,6 +5,7 @@ import { TimerControlBtns } from './timerControlBtns';
 import useTimerControls from './../hooks/useTimerControls';
 import { MinutesInput } from './minutesInput';
 import NumberInput from './numberInput';
+import CircularProgressBar from './circularProgressBar';
 
 export const TimerControllerUI = () => {
   const [duration, setDuration] = useState<Time>({
@@ -55,7 +56,12 @@ export const TimerControllerUI = () => {
         <NumberInput value={reps} onChange={(value) => setReps(value)} min={1} max={100} />
       </div>
 
-      <div className="mt-auto">
+      <CircularProgressBar
+        timeLeft={{ minutes: TimerControls.minutesLeft, seconds: TimerControls.minutesLeft }}
+        width={300}
+      />
+
+      <div className="">
         <TimerControlBtns
           startTimer={TimerControls.startTimer}
           pauseTimer={TimerControls.pauseTimer}
